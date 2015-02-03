@@ -18,7 +18,13 @@ typedef struct xtiny_ctx {
 	/*other parameters you deem fit */
 } xtiny_ctx;
 
+typedef struct pthread_args {
+	char filename[MAX_LENGTH];
+	int connfd;
+	int filesize;
+} pthread_args;
 
+void *thread_serve_static(void *vargp);
 void get_filetype(char *filename, char *filetype);
 void conn_serve(int fd, xtiny_ctx *ctx);
 int parse_uri(char* uri, char* filename, char* cgiargs, xtiny_ctx *server_ctx);
