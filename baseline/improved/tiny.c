@@ -43,8 +43,12 @@ int main(int argc, char** argv) {
     Signal(SIGCHLD, sigchild_handler);
     Signal(SIGINT, sigint_handler);
 
+    threadpool thpool = thpool_init(5);
+     
 	xtiny_init(&server_ctx);
     server_ctx.port = port;
+
+    //server_ctx.pool = thpool;
 
 	listen_fd = Open_listenfd(port);
 
@@ -158,9 +162,9 @@ void snapy_serve_dynamic(xtiny_ctx *server_ctx, int connfd, char* filename, char
     snapy_thread_args* targs = (snapy_thread_args *) Malloc(sizeof(snapy_thread_args));
     targs->connfd = connfd;
     targs->port = server_ctx->dynamic_port;
-
     set_snappy_env(server_ctx, cgiargs, targs);
-    Pthread_create(&tid, NULL, snapy_thread_serve_dynamic, targs); 
+    //Pthread_create(&tid, NULL, snapy_thread_serve_dynamic, targs);
+    //thpool_add_work(server_ctx->pool, snapy_thread_serve_dynamic, targs);
 }
 
 void set_snappy_env(xtiny_ctx *server_ctx, char* arg_string, snapy_thread_args* args) {
@@ -182,9 +186,7 @@ void* snapy_thread_serve_dynamic(void* args) {
     
     snapy_thread_args *targs = (snapy_thread_args *)args;
 
-    /* Open connection to the dynamic content process */
-    
-    
+    /* Open connection to the dynamic content process */    
     struct sockaddr_un client_sock;
     char buf[1024];
     int fd, rc;

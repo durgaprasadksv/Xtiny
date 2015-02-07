@@ -148,8 +148,8 @@ struct thpool_* thpool_init(int num_threads){
 	
 	/* Wait for threads to initialize */
 	while (thpool_p->num_threads_alive != num_threads) {}
-
 	return thpool_p;
+
 }
 
 
