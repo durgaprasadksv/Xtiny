@@ -26,7 +26,6 @@ typedef struct xtiny_ctx {
 	int port;
 	int mode;
 	int dynamic_port;
-	threadpool pool;
 	/*other parameters you deem fit */
 } xtiny_ctx;
 
