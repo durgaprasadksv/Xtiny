@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 	int c;
     struct stat sbuf;
 
-	while((c = getopt(argc, argv, "p:f:")) != -1 ) {
+	while((c = getopt(argc, argv, "p:f:cxr:")) != -1 ) {
 
 		switch(c) {
 			case 'p':
@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
+    server_ctx.mode = SNAPY_MODE;
     Signal(SIGCHLD, sigchild_handler);
     Signal(SIGINT, sigint_handler);
 
@@ -46,6 +47,7 @@ int main(int argc, char** argv) {
     server_ctx.port = port;
 
 	listen_fd = Open_listenfd(port);
+
 	while(1) {
 		clientlen = sizeof(clientaddr);
 		conn_fd = Accept(listen_fd, (SA *)&clientaddr, &clientlen);
@@ -54,15 +56,15 @@ int main(int argc, char** argv) {
 }
 
 void xtiny_init(xtiny_ctx* ctx) {
+
 	parse_config(ctx);
-    strcpy(ctx->server_name, "XTiny");
+    strcpy(ctx->server_name, "Snapy");
 	log_file = fopen(ctx->log_file, "w+");
-
-
+    
 	/* other init stuff for optimized server */ 
 
     log_context(ctx);
-	log_info("Successfull init for XTiny");
+	log_info("Successfull init for Snapy");
 }
 
 void parse_config(xtiny_ctx* server_ctx) {
@@ -75,18 +77,23 @@ void parse_config(xtiny_ctx* server_ctx) {
 		//debug macro
 		exit(1);
 	} 
-    
+
 	while (fscanf(config_file, "%s\n", buf) != EOF) {
 		ptr = strtok(buf, "=");
-		if (!strcmp(ptr, "cgi-path")) {
-			strcpy(server_ctx->cgi_path, strtok(NULL, "="));
-		} else if (!strcmp(buf, "static-root")) {
-			strcpy(server_ctx->static_root, strtok(NULL, "="));
-		} else if (!strcmp(buf, "log-file")) {
-			strcpy(server_ctx->log_file, strtok(NULL, "="));
-		} else {
-		  log_err("Invalid argument in settings file");
-		}
+        if (ptr) {
+            if (!strcmp(ptr, "cgi-path")) {
+                strcpy(server_ctx->cgi_path, strtok(NULL, "="));
+            } else if (!strcmp(buf, "static-root")) {
+                strcpy(server_ctx->static_root, strtok(NULL, "="));
+            } else if (!strcmp(buf, "log-file")) {
+                strcpy(server_ctx->log_file, strtok(NULL, "="));
+            } else if (!strcmp(buf, "persistent-port")) {
+                server_ctx->dynamic_port = atoi(strtok(NULL, "="));
+            } else {
+                log_err("Invalid argument in settings file");
+            }
+        }
+        memset(buf, 0, MAXLINE);	
 	}
 	fclose(config_file);
 }
@@ -127,42 +134,80 @@ void conn_serve(int connfd, xtiny_ctx *server_ctx) {
 		}
     	xtiny_serve_static(server_ctx, connfd, filename, sbuf.st_size);
     } else {   
-
-        if (!(S_ISREG(sbuf.st_mode)) || !(S_IXUSR & sbuf.st_mode)) { 
-            clienterror(connfd, filename, "403", "Forbidden",
-            "Tiny couldn't run the CGI program");
-            return;
+        if (! server_ctx-> mode & SNAPY_MODE) {
+            if (!(S_ISREG(sbuf.st_mode)) || !(S_IXUSR & sbuf.st_mode)) { 
+                clienterror(connfd, filename, "403", "Forbidden",
+                "Tiny couldn't run the CGI program");
+                return;
+            }
+            xtiny_serve_dynamic(server_ctx, connfd, filename, cgiargs);
+        } else {
+            snapy_serve_dynamic(server_ctx, connfd, filename, cgiargs);
         }
-    	xtiny_serve_dynamic(server_ctx, connfd, filename, cgiargs);
     }
 }
 
-void xtiny_serve_static(xtiny_ctx *server_ctx, int connfd, char* filename, int filesize) {
+void snapy_serve_dynamic(xtiny_ctx *server_ctx, int connfd, char* filename, char* cgiargs) {
+    
+    /*
+        program_name ./snapy/adder
+        program_args snap/adder?1&2
+    */
 
-    /* write the static content to connfd */
-
-    //int srcfd;
-    char *srcp, filetype[MAXLINE], buf[MAXBUF];
     pthread_t tid;
-    pthread_args *targs;
-
-    /* Send response headers to client */
-    get_filetype(filename, filetype);       
-    sprintf(buf, "HTTP/1.0 200 OK\r\n");   
-    sprintf(buf, "%sServer: Tiny Web Server\r\n", buf);
-    sprintf(buf, "%sContent-length: %d\r\n", buf, filesize);
-    sprintf(buf, "%sContent-type: %s\r\n\r\n", buf, filetype);
-    Rio_writen(connfd, buf, strlen(buf)); 
-
-
-    /* Send response body to client */
-    targs = (pthread_args *) Malloc(sizeof(pthread_args));
-    strcpy(targs->filename, filename);
+    snapy_thread_args* targs = (snapy_thread_args *) Malloc(sizeof(snapy_thread_args));
     targs->connfd = connfd;
-    targs->filesize = filesize;
+    targs->port = server_ctx->dynamic_port;
 
-    Pthread_create(&tid, NULL, thread_serve_static, targs);
-    return;       
+    set_snappy_env(server_ctx, cgiargs, targs);
+    Pthread_create(&tid, NULL, snapy_thread_serve_dynamic, targs); 
+}
+
+void set_snappy_env(xtiny_ctx *server_ctx, char* arg_string, snapy_thread_args* args) {
+
+    char *ptr;
+    ptr = index(arg_string, '?');
+    if (ptr) {
+        strcpy(args->program_args, ptr+1);
+        *ptr = '\0';
+    }
+
+    ptr = index(arg_string, '/');
+    if (ptr) {
+        strcpy(args->program_name, ptr+1);
+    }
+}
+
+void* snapy_thread_serve_dynamic(void* args) {
+    
+    snapy_thread_args *targs = (snapy_thread_args *)args;
+
+    /* Open connection to the dynamic content process */
+    
+    
+    struct sockaddr_un client_sock;
+    char buf[1024];
+    int fd, rc;
+
+    fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (fd < 0) {
+        perror("opening stream socket");
+        exit(1);
+    }
+
+    memset(&client_sock, 0, sizeof(client_sock));
+    client_sock.sun_family = AF_UNIX;
+    strcpy(client_sock.sun_path, "/tmp/snapy.sock");
+
+    if (connect(fd, (struct sockaddr *)&client_sock, sizeof(struct sockaddr_un)) < 0) {
+        close(fd);
+        perror("connecting stream socket");
+        exit(1);
+    }
+
+    send_fd(fd, targs->connfd);
+    Write(fd, "hello", 5);
+    Free(args);
 }
 
 void *thread_serve_static(void *vargp) {
@@ -183,41 +228,6 @@ void *thread_serve_static(void *vargp) {
     Free(vargp);
 
     return NULL;
-}
-
-void get_filetype(char *filename, char *filetype) 
-{
-    if (strstr(filename, ".html"))
-        strcpy(filetype, "text/html");
-    else if (strstr(filename, ".gif"))
-        strcpy(filetype, "image/gif");
-    else if (strstr(filename, ".jpg"))
-        strcpy(filetype, "image/jpeg");
-    else if (strstr(filename, ".css"))
-        strcpy(filetype, "text/css");
-    else if (strstr(filename, ".js"))
-        strcpy(filetype, "text/javascript");
-    else
-        strcpy(filetype, "text/plain");
-} 
-
-void xtiny_serve_dynamic(xtiny_ctx *server_ctx, int fd, char* filename, char* cgiargs) {
-
-    char buf[MAXLINE], *emptylist[] = { NULL };
-
-    /* Return first part of HTTP response */
-    sprintf(buf, "HTTP/1.0 200 OK\r\n"); 
-    Rio_writen(fd, buf, strlen(buf));
-    sprintf(buf, "Server: Tiny Web Server\r\n");
-    Rio_writen(fd, buf, strlen(buf));
-
-    if (Fork() == 0) {
-        set_cgi_env(server_ctx, cgiargs);
-        Dup2(fd, STDOUT_FILENO);
-        Execve(filename, emptylist, environ); 
-        Close(fd);
-    }
-    //Wait(NULL); //waitpid(-1, &status, 0) we can do better by installing SIGCHLD Handler
 }
 
 void set_cgi_env(xtiny_ctx *server_ctx, char* arg_string) {
@@ -263,6 +273,77 @@ void set_cgi_env(xtiny_ctx *server_ctx, char* arg_string) {
     */
 
 }
+
+
+
+void xtiny_serve_static(xtiny_ctx *server_ctx, int connfd, char* filename, int filesize) {
+
+    /* write the static content to connfd */
+
+    //int srcfd;
+    char *srcp, filetype[MAXLINE], buf[MAXBUF];
+    pthread_t tid;
+    pthread_args *targs;
+
+    /* Send response headers to client */
+    get_filetype(filename, filetype);       
+    sprintf(buf, "HTTP/1.0 200 OK\r\n");   
+    sprintf(buf, "%sServer: Tiny Web Server\r\n", buf);
+    sprintf(buf, "%sContent-length: %d\r\n", buf, filesize);
+    sprintf(buf, "%sContent-type: %s\r\n\r\n", buf, filetype);
+    Rio_writen(connfd, buf, strlen(buf)); 
+
+
+    /* Send response body to client */
+
+
+    targs = (pthread_args *) Malloc(sizeof(pthread_args));
+    strcpy(targs->filename, filename);
+    targs->connfd = connfd;
+    targs->filesize = filesize;
+
+    Pthread_create(&tid, NULL, thread_serve_static, targs);
+    return;       
+}
+
+
+
+void get_filetype(char *filename, char *filetype) 
+{
+    if (strstr(filename, ".html"))
+        strcpy(filetype, "text/html");
+    else if (strstr(filename, ".gif"))
+        strcpy(filetype, "image/gif");
+    else if (strstr(filename, ".jpg"))
+        strcpy(filetype, "image/jpeg");
+    else if (strstr(filename, ".css"))
+        strcpy(filetype, "text/css");
+    else if (strstr(filename, ".js"))
+        strcpy(filetype, "text/javascript");
+    else
+        strcpy(filetype, "text/plain");
+} 
+
+void xtiny_serve_dynamic(xtiny_ctx *server_ctx, int fd, char* filename, char* cgiargs) {
+
+    char buf[MAXLINE], *emptylist[] = { NULL };
+    
+    /* Return first part of HTTP response */
+    sprintf(buf, "HTTP/1.0 200 OK\r\n"); 
+    Rio_writen(fd, buf, strlen(buf));
+    sprintf(buf, "Server: Tiny Web Server\r\n");
+    Rio_writen(fd, buf, strlen(buf));
+
+    if (Fork() == 0) {
+        set_cgi_env(server_ctx, cgiargs);
+        Dup2(fd, STDOUT_FILENO);
+        Execve(filename, emptylist, environ); 
+        Close(fd);
+    }
+    //Wait(NULL); //waitpid(-1, &status, 0) we can do better by installing SIGCHLD Handler
+}
+
+
 int parse_uri(char* uri, char* filename, char* cgiargs, xtiny_ctx *server_ctx) {
 
 	char *ptr;
@@ -285,7 +366,7 @@ int parse_uri(char* uri, char* filename, char* cgiargs, xtiny_ctx *server_ctx) {
 		/*dynamic content*/
 		ptr = strstr(uri, server_ctx->cgi_path);
 		if (ptr) {
-			strcpy(cgiargs, ptr); /*copy the /cgi-bin/prog?1&2&3 ... */
+			strcpy(cgiargs, ptr); /*copy the 'cgi-bin/prog?1&2&3' ... */
 			//*ptr = '\0';
 		} else {
 			strcpy(cgiargs, "");
@@ -296,9 +377,9 @@ int parse_uri(char* uri, char* filename, char* cgiargs, xtiny_ctx *server_ctx) {
         if (ptr) {
             *ptr = '\0';
         }
-    
-		strcpy(filename, "."); /* no need for file serving */
-		strcat(filename, uri);
+        
+		strcpy(filename, "."); /* file name will be the full path of executable */
+		strcat(filename, uri); /* ./cgi-bin/adder | cgi-bin/adder?1&2 */
         
 		log_info("cgi-args: [%s]", cgiargs);
 		log_context(server_ctx);
@@ -348,3 +429,40 @@ void log_context(xtiny_ctx *server_ctx) {
 	log_info("static-root: [%s] ", server_ctx->static_root);
 	log_info("log file   : [%s] ", server_ctx->log_file);
 }
+
+ int send_fd(int socket, int fd_to_send)
+ {
+  struct msghdr socket_message;
+  struct iovec io_vector[1];
+  struct cmsghdr *control_message = NULL;
+  char message_buffer[1];
+  /* storage space needed for an ancillary element with a paylod of length is CMSG_SPACE(sizeof(length)) */
+  char ancillary_element_buffer[CMSG_SPACE(sizeof(int))];
+  int available_ancillary_element_buffer_space;
+
+  /* at least one vector of one byte must be sent */
+  message_buffer[0] = 'F';
+  io_vector[0].iov_base = message_buffer;
+  io_vector[0].iov_len = 1;
+
+  /* initialize socket message */
+  memset(&socket_message, 0, sizeof(struct msghdr));
+  socket_message.msg_iov = io_vector;
+  socket_message.msg_iovlen = 1;
+
+  /* provide space for the ancillary data */
+  available_ancillary_element_buffer_space = CMSG_SPACE(sizeof(int));
+  memset(ancillary_element_buffer, 0, available_ancillary_element_buffer_space);
+  socket_message.msg_control = ancillary_element_buffer;
+  socket_message.msg_controllen = available_ancillary_element_buffer_space;
+
+  /* initialize a single ancillary data element for fd passing */
+  control_message = CMSG_FIRSTHDR(&socket_message);
+  control_message->cmsg_level = SOL_SOCKET;
+  control_message->cmsg_type = SCM_RIGHTS;
+  control_message->cmsg_len = CMSG_LEN(sizeof(int));
+  *((int *) CMSG_DATA(control_message)) = fd_to_send;
+
+  return sendmsg(socket, &socket_message, 0);
+ }
+
