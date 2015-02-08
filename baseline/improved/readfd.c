@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
   int fd,cl,rc;
  int rcvdfd;
 
-  const char* socket_path="/tmp/snapy.sock";
+  const char* socket_path="/tmp/0.sock";
 
   if ( (fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     perror("socket error");
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
       args->targetfd = rcvdfd;
       args->connfd = cl;
       threadpool_add(pool, thread_adder, args, 0);
-      
+
 	    //adder(rcvdfd);
 	    //Close(rcvdfd);
       //Close(cl);

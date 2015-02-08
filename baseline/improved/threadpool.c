@@ -268,7 +268,7 @@ static void *threadpool_thread(void *threadpool)
     for(;;) {
         /* Lock must be taken to wait on conditional variable */
         pthread_mutex_lock(&(pool->lock));
-
+        
         /* Wait on condition variable, check for spurious wakeups.
            When returning from pthread_cond_wait(), we own the lock. */
         while((pool->count == 0) && (!pool->shutdown)) {
@@ -280,7 +280,7 @@ static void *threadpool_thread(void *threadpool)
             (pool->count == 0))) {
             break;
         }
-
+        
         /* Grab our task */
         task.function = pool->queue[pool->head].function;
         task.argument = pool->queue[pool->head].argument;

@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "threadpool.h"
+#include "tpool.h"
 
 #define MAX_LENGTH 1024
 #define MAX_STRPORT_LENGTH 20
@@ -28,8 +28,10 @@ typedef struct xtiny_ctx {
 	int port;
 	int mode;
 	int dynamic_port;
-	threadpool_t *thread_pool;
+	tpool *thread_pool;
 } xtiny_ctx;
+
+
 
 typedef struct pthread_args {
 	char filename[MAX_LENGTH];
@@ -44,12 +46,7 @@ typedef struct snapy_thread_args {
 	int port;
 } snapy_thread_args;
 
-int recv_fd(int socket);
- int send_fd(int socket, int fd_to_send);
-ssize_t
-Write_fd(int fd, void *ptr, size_t nbytes, int sendfd);
-ssize_t
-Read_fd(int fd, void *ptr, size_t nbytes, int *recvfd);
+extern int send_fd(int socket, int fd_to_send);
 void set_snappy_env(xtiny_ctx *server_ctx, char* arg_string, snapy_thread_args* args);
 void *thread_serve_static(void *vargp);
 void get_filetype(char *filename, char *filetype);

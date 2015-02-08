@@ -1,6 +1,6 @@
-[INFO] (tiny.c:439) dumping xtiny_ctx
-[INFO] (tiny.c:440) config-file: [settings.conf] 
-[INFO] (tiny.c:441) cgi-path   : [cgi-bin] 
-[INFO] (tiny.c:442) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
-[INFO] (tiny.c:443) log file   : [xtiny.log] 
-[INFO] (tiny.c:80) Successfull init for Snapy
+[INFO] (tiny.c:450) dumping xtiny_ctx
+[INFO] (tiny.c:451) config-file: [settings.conf] 
+[INFO] (tiny.c:452) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:453) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:454) log file   : [xtiny.log] 
+[INFO] (tiny.c:82) Successfull init for Snapy
