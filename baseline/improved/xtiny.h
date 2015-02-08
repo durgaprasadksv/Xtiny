@@ -9,13 +9,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "thpool.h"
+#include "threadpool.h"
 
 #define MAX_LENGTH 1024
 #define MAX_STRPORT_LENGTH 20
 #define CGI_MODE 1
 #define XCGI_MODE 2
 #define SNAPY_MODE 4
+#define THREAD_COUNT 100
+#define QUEUE_SIZE 150
 
 typedef struct xtiny_ctx {
 	char configfile[MAX_LENGTH];
@@ -26,8 +28,7 @@ typedef struct xtiny_ctx {
 	int port;
 	int mode;
 	int dynamic_port;
-	threadpool pool;
-	/*other parameters you deem fit */
+	threadpool_t *thread_pool;
 } xtiny_ctx;
 
 typedef struct pthread_args {

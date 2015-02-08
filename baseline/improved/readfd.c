@@ -1,10 +1,16 @@
 #include "csapp.h"
 #include "xtiny.h"
 
+typedef struct request_args {
+  int targetfd;
+  int connfd;
+  //include args too
+} request_args;
+void* thread_adder(void *args);
 
 int adder(int fd) {
-    char *buf, *p;
-    char arg1[MAXLINE], arg2[MAXLINE], content[MAXLINE];
+
+    char content[MAXLINE];
     int n1=1, n2=2;
 
 	
@@ -53,20 +59,52 @@ int main(int argc, char *argv[]) {
     exit(-1);
   }
 
+  threadpool_t *pool;
+  pool = threadpool_create(100, 200, 0);
+
   while (1) {
+
 	    if ((cl = accept(fd, NULL, NULL)) == -1) {
 	      perror("accept error");
 	      continue;
 	    }
-
 	    //read arguments
 	    rcvdfd = recv_fd(cl);
-	    read(cl, buf, 2);
-	    printf(" %c \n", buf[0]);
-	    adder(rcvdfd);
-	    Close(rcvdfd);
+	    //read(cl, buf, 2);
+      request_args *args = (request_args*) Malloc(sizeof(request_args));
+      args->targetfd = rcvdfd;
+      args->connfd = cl;
+      threadpool_add(pool, thread_adder, args, 0);
+      
+	    //adder(rcvdfd);
+	    //Close(rcvdfd);
+      //Close(cl);
 	}
   return 0;
+}
+
+void* thread_adder(void *args) {
+
+    request_args *rargs = (request_args*)args;
+    char content[MAXLINE];
+    int n1=1, n2=2;
+    int fd = rargs->targetfd;
+
+    /* Make the response body */
+  
+    dprintf(fd, "%s", "HTTP/1.0 200 OK\r\n");
+    sprintf(content, "<html> THE Internet addition portal.\r\n<p>");
+    sprintf(content, "%sThe answer is: %d + %d = %d\r\n<p>", 
+      content, n1, n2, n1 + n2);
+    sprintf(content, "%sThanks for visiting!\r\n</html>", content);
+
+    dprintf(fd, "Content-length: %d\r\n", (int)strlen(content));
+    dprintf(fd, "Content-type: text/html\r\n\r\n");
+  
+    dprintf(fd, "%s", content); 
+    Close(fd);
+    Close(rargs->connfd);
+    Free(args);
 }
 
 

@@ -20,8 +20,10 @@ int main(int argc, char** argv) {
     char *f = NULL;
 	int c;
     struct stat sbuf;
+    int thread_count=0, queue_size=0;
+    threadpool_t *pool = NULL;
 
-	while((c = getopt(argc, argv, "p:f:cxr:")) != -1 ) {
+	while((c = getopt(argc, argv, "p:f:t:q:")) != -1 ) {
 
 		switch(c) {
 			case 'p':
@@ -36,6 +38,12 @@ int main(int argc, char** argv) {
                 } 
 				strcpy(server_ctx.configfile, f);
                 break;
+            case 't':
+                thread_count = atoi(optarg);
+                break;
+            case 'q':
+                queue_size = atoi(optarg);
+                break;
 		}
 	}
 
@@ -43,11 +51,13 @@ int main(int argc, char** argv) {
     Signal(SIGCHLD, sigchild_handler);
     Signal(SIGINT, sigint_handler);
 
-    threadpool thpool = thpool_init(5);
-
+    if (thread_count && queue_size) {
+        pool = threadpool_create(thread_count, queue_size, 0);
+        server_ctx.thread_pool = pool;
+    } 
+    
 	xtiny_init(&server_ctx);
     server_ctx.port = port;
-    server_ctx.pool = thpool;
 
 	listen_fd = Open_listenfd(port);
 
@@ -163,7 +173,7 @@ void snapy_serve_dynamic(xtiny_ctx *server_ctx, int connfd, char* filename, char
     targs->port = server_ctx->dynamic_port;
     set_snappy_env(server_ctx, cgiargs, targs);
     //Pthread_create(&tid, NULL, snapy_thread_serve_dynamic, targs);
-    thpool_add_work(server_ctx->pool, snapy_thread_serve_dynamic, targs);
+    threadpool_add(server_ctx->thread_pool, snapy_thread_serve_dynamic, targs, 0);
 }
 
 void set_snappy_env(xtiny_ctx *server_ctx, char* arg_string, snapy_thread_args* args) {
@@ -183,7 +193,7 @@ void set_snappy_env(xtiny_ctx *server_ctx, char* arg_string, snapy_thread_args* 
 
 void* snapy_thread_serve_dynamic(void* args) {
     
-    snapy_thread_args *targs = (snapy_thread_args *)args;
+    snapy_thread_args *targs = (snapy_thread_args *)args;  
 
     /* Open connection to the dynamic content process */    
     struct sockaddr_un client_sock;
@@ -205,9 +215,11 @@ void* snapy_thread_serve_dynamic(void* args) {
         perror("connecting stream socket");
         exit(1);
     }
-
+    log_info("sent connfd %d ", targs->connfd);
     send_fd(fd, targs->connfd);
-    Write(fd, "hello", 5);
+    //Write(fd, "hello", 5);
+    Close(targs->connfd);
+    Close(fd);
     Free(args);
 }
 

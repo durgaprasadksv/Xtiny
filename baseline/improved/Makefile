@@ -7,13 +7,13 @@ LIB = -lpthread
 
 all: tiny cgi
 
-tiny: tiny.c csapp.o thpool.o
-	$(CC) $(CFLAGS) -o tiny tiny.c thpool.o csapp.o $(LIB)
+tiny: tiny.c csapp.o threadpool.o
+	$(CC) $(CFLAGS) -o tiny tiny.c threadpool.o csapp.o $(LIB)
 
 csapp.o:
 	$(CC) $(CFLAGS) -c csapp.c
-thpool.o:
-	$(CC) $(CFLAGS) -c thpool.c
+threadpool.o:
+	$(CC) $(CFLAGS) -c threadpool.c
 cgi:
 	(cd cgi-bin; make)
 
