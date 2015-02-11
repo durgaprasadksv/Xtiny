@@ -53,6 +53,7 @@ int main(int argc, char** argv) {
     Signal(SIGCHLD, sigchild_handler);
     Signal(SIGINT, sigint_handler);
 
+
     if (thread_count && queue_size) {
         pool = tpool_init(thread_count, queue_size);
         server_ctx.thread_pool = pool;
@@ -60,7 +61,7 @@ int main(int argc, char** argv) {
     
 	xtiny_init(&server_ctx);
     server_ctx.port = port;
-
+    
 	listen_fd = Open_listenfd(port);
 
 	while(1) {
@@ -77,7 +78,7 @@ void xtiny_init(xtiny_ctx* ctx) {
 	log_file = fopen(ctx->log_file, "w+");
     
 	/* other init stuff for optimized server */ 
-
+    
     log_context(ctx);
 	log_info("Successfull init for Snapy");
 }
@@ -92,7 +93,7 @@ void parse_config(xtiny_ctx* server_ctx) {
 		//debug macro
 		exit(1);
 	} 
-
+    
 	while (fscanf(config_file, "%s\n", buf) != EOF) {
 		ptr = strtok(buf, "=");
         if (ptr) {
@@ -164,11 +165,7 @@ void conn_serve(int connfd, xtiny_ctx *server_ctx) {
 
 void snapy_serve_dynamic(xtiny_ctx *server_ctx, int connfd, char* filename, char* cgiargs) {
     
-    /*
-        program_name ./snapy/adder
-        program_args snap/adder?1&2
-    */
-
+    int res;
     /*
     snapy_thread_args* targs = (snapy_thread_args *) Malloc(sizeof(snapy_thread_args));
     targs->connfd = connfd;
@@ -180,7 +177,8 @@ void snapy_serve_dynamic(xtiny_ctx *server_ctx, int connfd, char* filename, char
     */
     tpool_args targs;
     targs.connfd = connfd;
-    tpool_add(server_ctx->thread_pool, &targs);
+    printf("adding connfd %d \n", connfd);
+    res = tpool_add(server_ctx->thread_pool, &targs);
     
 }
 
@@ -308,7 +306,7 @@ void xtiny_serve_static(xtiny_ctx *server_ctx, int connfd, char* filename, int f
     char filetype[MAXLINE], buf[MAXBUF];
     pthread_t tid;
     pthread_args *targs;
-    
+
     /* Send response headers to client */
     get_filetype(filename, filetype);       
     sprintf(buf, "HTTP/1.0 200 OK\r\n");   

@@ -1,5 +1,6 @@
 #include "csapp.h"
 #include "xtiny.h"
+#include "threadpool.h"
 
 typedef struct request_args {
   int targetfd;
@@ -36,7 +37,7 @@ int main(int argc, char *argv[]) {
   int fd,cl,rc;
  int rcvdfd;
 
-  const char* socket_path="/tmp/0.sock";
+  //const char* socket_path="/tmp/0.sock";
 
   if ( (fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     perror("socket error");
@@ -45,9 +46,9 @@ int main(int argc, char *argv[]) {
 
   memset(&addr, 0, sizeof(addr));
   addr.sun_family = AF_UNIX;
-  strncpy(addr.sun_path, socket_path, sizeof(addr.sun_path)-1);
+  strncpy(addr.sun_path, argv[1], sizeof(addr.sun_path)-1);
 
-  unlink(socket_path);
+  unlink(argv[1]);
 
   if (bind(fd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
     perror("bind error");
@@ -60,14 +61,15 @@ int main(int argc, char *argv[]) {
   }
 
   threadpool_t *pool;
-  pool = threadpool_create(100, 200, 0);
+  pool = threadpool_create(5, 10, 0);
+
+  
 
   while (1) {
 
-	    if ((cl = accept(fd, NULL, NULL)) == -1) {
-	      perror("accept error");
-	      continue;
-	    }
+      if ((cl = accept(fd, NULL, NULL)) == -1) {
+        perror("accept error");
+      }
 	    //read arguments
 	    rcvdfd = recv_fd(cl);
 	    //read(cl, buf, 2);

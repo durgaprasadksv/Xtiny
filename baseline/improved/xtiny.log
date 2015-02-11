@@ -1,6 +1,72 @@
-[INFO] (tiny.c:450) dumping xtiny_ctx
-[INFO] (tiny.c:451) config-file: [settings.conf] 
-[INFO] (tiny.c:452) cgi-path   : [cgi-bin] 
-[INFO] (tiny.c:453) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
-[INFO] (tiny.c:454) log file   : [xtiny.log] 
-[INFO] (tiny.c:82) Successfull init for Snapy
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:83) Successfull init for Snapy
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
+[INFO] (tiny.c:406) cgi-args: [cgi-bin/adder?1&2]
+[INFO] (tiny.c:448) dumping xtiny_ctx
+[INFO] (tiny.c:449) config-file: [settings.conf] 
+[INFO] (tiny.c:450) cgi-path   : [cgi-bin] 
+[INFO] (tiny.c:451) static-root: [/Users/maverick/git/Xtiny/baseline/optimized_baseline/static/] 
+[INFO] (tiny.c:452) log file   : [xtiny.log] 
