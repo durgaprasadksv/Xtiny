@@ -1,0 +1,253 @@
+httperf --server angelshark.ics.cs.cmu.edu --port 8000 --uri /cgi-bin/adder?1\&2 --rate 1000 --num-conn 10000 --timeout 5
+httperf --timeout=5 --client=0/1 --server=angelshark.ics.cs.cmu.edu --port=8000 --uri=/cgi-bin/adder?1&2 --rate=1000 --send-buffer=4096 --recv-buffer=16384 --num-conns=10000 --num-calls=1
+Maximum connect burst length: 8
+
+Total: connections 10000 requests 10000 replies 10000 test-duration 10.134 s
+
+Connection rate: 986.8 conn/s (1.0 ms/conn, <=150 concurrent connections)
+Connection time [ms]: min 133.1 avg 136.4 max 150.9 median 136.5 stddev 1.5
+Connection time [ms]: connect 68.0
+Connection length [replies/conn]: 1.000
+
+Request rate: 986.8 req/s (1.0 ms/req)
+Request size [B]: 95.0
+
+Reply rate [replies/s]: min 972.8 avg 986.3 max 999.9 stddev 19.1 (2 samples)
+Reply time [ms]: response 68.3 transfer 0.1
+Reply size [B]: header 64.0 content 92.0 footer 0.0 (total 156.0)
+Reply status: 1xx=0 2xx=10000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 1.17 system 8.93 (user 11.5% system 88.1% total 99.7%)
+Net I/O: 241.9 KB/s (2.0*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+=====================================================================
+
+httperf --server angelshark.ics.cs.cmu.edu --port 8000 --uri /cgi-bin/adder?1\&2 --rate 2000 --num-conn 20000 --timeout 5
+httperf --timeout=5 --client=0/1 --server=angelshark.ics.cs.cmu.edu --port=8000 --uri=/cgi-bin/adder?1&2 --rate=2000 --send-buffer=4096 --recv-buffer=16384 --num-conns=20000 --num-calls=1
+Maximum connect burst length: 4
+
+Total: connections 20000 requests 20000 replies 20000 test-duration 10.136 s
+
+Connection rate: 1973.2 conn/s (0.5 ms/conn, <=303 concurrent connections)
+Connection time [ms]: min 133.1 avg 137.0 max 152.2 median 136.5 stddev 1.8
+Connection time [ms]: connect 68.3
+Connection length [replies/conn]: 1.000
+
+Request rate: 1973.2 req/s (0.5 ms/req)
+Request size [B]: 95.0
+
+Reply rate [replies/s]: min 1945.9 avg 1972.7 max 1999.5 stddev 37.9 (2 samples)
+Reply time [ms]: response 68.5 transfer 0.2
+Reply size [B]: header 64.0 content 92.0 footer 0.0 (total 156.0)
+Reply status: 1xx=0 2xx=20000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.66 system 9.45 (user 6.5% system 93.2% total 99.7%)
+Net I/O: 483.7 KB/s (4.0*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+=====================================================================
+
+
+httperf --server angelshark.ics.cs.cmu.edu --port 8000 --uri /cgi-bin/adder?1\&2 --rate 3000 --num-conn 30000 --timeout 5
+httperf --timeout=5 --client=0/1 --server=angelshark.ics.cs.cmu.edu --port=8000 --uri=/cgi-bin/adder?1&2 --rate=3000 --send-buffer=4096 --recv-buffer=16384 --num-conns=30000 --num-calls=1
+Maximum connect burst length: 7
+
+Total: connections 30000 requests 30000 replies 30000 test-duration 10.137 s
+
+Connection rate: 2959.4 conn/s (0.3 ms/conn, <=478 concurrent connections)
+Connection time [ms]: min 133.2 avg 137.2 max 160.4 median 136.5 stddev 2.1
+Connection time [ms]: connect 68.4
+Connection length [replies/conn]: 1.000
+
+Request rate: 2959.4 req/s (0.3 ms/req)
+Request size [B]: 95.0
+
+Reply rate [replies/s]: min 2918.2 avg 2959.1 max 3000.0 stddev 57.8 (2 samples)
+Reply time [ms]: response 68.6 transfer 0.2
+Reply size [B]: header 64.0 content 92.0 footer 0.0 (total 156.0)
+Reply status: 1xx=0 2xx=30000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.49 system 9.61 (user 4.9% system 94.8% total 99.7%)
+Net I/O: 725.4 KB/s (5.9*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+=====================================================================
+
+
+httperf --server angelshark.ics.cs.cmu.edu --port 8000 --uri /cgi-bin/adder?1\&2 --rate 4000 --num-conn 40000 --timeout 5
+httperf --timeout=5 --client=0/1 --server=angelshark.ics.cs.cmu.edu --port=8000 --uri=/cgi-bin/adder?1&2 --rate=4000 --send-buffer=4096 --recv-buffer=16384 --num-conns=40000 --num-calls=1
+Maximum connect burst length: 7
+
+Total: connections 40000 requests 40000 replies 40000 test-duration 10.145 s
+
+Connection rate: 3942.7 conn/s (0.3 ms/conn, <=1811 concurrent connections)
+Connection time [ms]: min 133.7 avg 193.0 max 1254.3 median 140.5 stddev 91.1
+Connection time [ms]: connect 96.8
+Connection length [replies/conn]: 1.000
+
+Request rate: 3942.7 req/s (0.3 ms/req)
+Request size [B]: 95.0
+
+Reply rate [replies/s]: min 3842.4 avg 3942.9 max 4043.5 stddev 142.2 (2 samples)
+Reply time [ms]: response 96.0 transfer 0.2
+Reply size [B]: header 64.0 content 92.0 footer 0.0 (total 156.0)
+Reply status: 1xx=0 2xx=40000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.37 system 9.74 (user 3.7% system 96.0% total 99.7%)
+Net I/O: 966.4 KB/s (7.9*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+=====================================================================
+
+httperf --server angelshark.ics.cs.cmu.edu --port 8000 --uri /cgi-bin/adder?1\&2 --rate 5000 --num-conn 50000 --timeout 5
+httperf --timeout=5 --client=0/1 --server=angelshark.ics.cs.cmu.edu --port=8000 --uri=/cgi-bin/adder?1&2 --rate=5000 --send-buffer=4096 --recv-buffer=16384 --num-conns=50000 --num-calls=1
+Maximum connect burst length: 12
+
+Total: connections 50000 requests 49984 replies 49735 test-duration 13.496 s
+
+Connection rate: 3704.8 conn/s (0.3 ms/conn, <=7294 concurrent connections)
+Connection time [ms]: min 133.7 avg 727.2 max 7218.1 median 492.5 stddev 784.4
+Connection time [ms]: connect 314.0
+Connection length [replies/conn]: 1.000
+
+Request rate: 3703.6 req/s (0.3 ms/req)
+Request size [B]: 95.0
+
+Reply rate [replies/s]: min 4112.1 avg 4266.8 max 4421.4 stddev 218.7 (2 samples)
+Reply time [ms]: response 346.6 transfer 67.2
+Reply size [B]: header 64.0 content 92.0 footer 0.0 (total 156.0)
+Reply status: 1xx=0 2xx=49735 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.40 system 13.05 (user 3.0% system 96.7% total 99.7%)
+Net I/O: 905.0 KB/s (7.4*10^6 bps)
+
+Errors: total 265 client-timo 265 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+
+=====================================================================
+
+httperf --timeout=5 --client=0/1 --server=angelshark.ics.cs.cmu.edu
+--port=8000 --uri=/cgi-bin/adder?1&2 --rate=6000 --send-buffer=4096
+--recv-buffer=16384 --num-conns=60000 --num-calls=1
+Maximum connect burst length: 15
+
+Total: connections 60000 requests 60000 replies 60000 test-duration 10.138 s
+
+Connection rate: 5918.4 conn/s (0.2 ms/conn, <=1018 concurrent connections)
+Connection time [ms]: min 133.0 avg 138.0 max 174.8 median 136.5 stddev 4.8
+Connection time [ms]: connect 68.8
+Connection length [replies/conn]: 1.000
+
+Request rate: 5918.4 req/s (0.2 ms/req)
+Request size [B]: 95.0
+
+Reply rate [replies/s]: min 5835.8 avg 5918.2 max 6000.6 stddev 116.6
+(2 samples)
+Reply time [ms]: response 69.0 transfer 0.2
+Reply size [B]: header 64.0 content 84.0 footer 0.0 (total 148.0)
+Reply status: 1xx=0 2xx=60000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.34 system 9.76 (user 3.4% system 96.3% total 99.6%)
+Net I/O: 1404.5 KB/s (11.5*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+
+
+=====================================================================
+
+[ec2-user@ip-172-31-37-55 src]$ ./httperf --server
+angelshark.ics.cs.cmu.edu --port 8000 --uri /cgi-bin/adder?1\&2 --rate
+7000 --num-conn 100000 --timeout 5
+httperf --timeout=5 --client=0/1 --server=angelshark.ics.cs.cmu.edu
+--port=8000 --uri=/cgi-bin/adder?1&2 --rate=7000 --send-buffer=4096
+--recv-buffer=16384 --num-conns=100000 --num-calls=1
+Maximum connect burst length: 113
+
+Total: connections 100000 requests 100000 replies 100000 test-duration 14.420 s
+
+Connection rate: 6934.7 conn/s (0.1 ms/conn, <=1919 concurrent connections)
+Connection time [ms]: min 133.5 avg 143.3 max 276.8 median 137.5 stddev 18.7
+Connection time [ms]: connect 71.5
+Connection length [replies/conn]: 1.000
+
+Request rate: 6934.7 req/s (0.1 ms/req)
+Request size [B]: 95.0
+
+Reply rate [replies/s]: min 6806.2 avg 6906.1 max 7005.9 stddev 141.2
+(2 samples)
+Reply time [ms]: response 71.6 transfer 0.2
+Reply size [B]: header 64.0 content 84.0 footer 0.0 (total 148.0)
+Reply status: 1xx=0 2xx=100000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.55 system 13.79 (user 3.8% system 95.7% total 99.5%)
+Net I/O: 1645.6 KB/s (13.5*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+
+=====================================================================
+
+httperf --timeout=5 --client=0/1 --server=angelshark.ics.cs.cmu.edu
+--port=8000 --uri=/cgi-bin/adder?1&2 --rate=9000 --send-buffer=4096
+--recv-buffer=16384 --num-conns=100000 --num-calls=1
+Maximum connect burst length: 18
+
+Total: connections 100000 requests 100000 replies 100000 test-duration 11.249 s
+
+Connection rate: 8889.9 conn/s (0.1 ms/conn, <=1433 concurrent connections)
+Connection time [ms]: min 133.6 avg 139.0 max 1145.4 median 137.5 stddev 26.3
+Connection time [ms]: connect 69.5
+Connection length [replies/conn]: 1.000
+
+Request rate: 8889.9 req/s (0.1 ms/req)
+Request size [B]: 95.0
+
+Reply rate [replies/s]: min 8751.9 avg 8876.6 max 9001.3 stddev 176.3
+(2 samples)
+Reply time [ms]: response 69.4 transfer 0.1
+Reply size [B]: header 64.0 content 84.0 footer 0.0 (total 148.0)
+Reply status: 1xx=0 2xx=100000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.38 system 10.81 (user 3.4% system 96.1% total 99.5%)
+Net I/O: 2109.6 KB/s (17.3*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+
+
+=====================================================================
+
+httperf --timeout=5 --client=0/1 --server=angelshark.ics.cs.cmu.edu
+--port=8000 --uri=/cgi-bin/adder?1&2 --rate=10000 --send-buffer=4096
+--recv-buffer=16384 --num-conns=100000 --num-calls=1
+Maximum connect burst length: 21
+
+Total: connections 100000 requests 100000 replies 100000 test-duration 10.128 s
+
+Connection rate: 9873.7 conn/s (0.1 ms/conn, <=1419 concurrent connections)
+Connection time [ms]: min 133.7 avg 138.6 max 143.7 median 138.5 stddev 1.4
+Connection time [ms]: connect 68.9
+Connection length [replies/conn]: 1.000
+
+Request rate: 9873.7 req/s (0.1 ms/req)
+Request size [B]: 95.0
+
+Reply rate [replies/s]: min 9733.8 avg 9871.5 max 10009.3 stddev 194.8
+(2 samples)
+Reply time [ms]: response 69.6 transfer 0.1
+Reply size [B]: header 64.0 content 84.0 footer 0.0 (total 148.0)
+Reply status: 1xx=0 2xx=100000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.31 system 9.77 (user 3.1% system 96.4% total 99.5%)
+Net I/O: 2343.1 KB/s (19.2*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+
+=====================================================================

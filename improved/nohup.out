@@ -1,0 +1,6 @@
+bind error: Address already in use
+nohup: ./snapy_dynamic: No such file or directory
+nohup: ./snapy_dynamic: No such file or directory
+nohup: ./snapy_dynamic: No such file or directory
+snapy(13003,0x10bbad000) malloc: *** error for object 0x7f8f1ae00808: pointer being freed was not allocated
+*** set a breakpoint in malloc_error_break to debug
