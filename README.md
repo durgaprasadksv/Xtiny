@@ -1,22 +1,36 @@
-# Xtiny
-Xtiny is a concurrent webserver for Internet Services CMU.
+# xtiny
+
+XTiny is a high performance concurrent server 
+written for Internet Services course at CMU. 
+http://www.ece.cmu.edu/~ece845/
 
 Design:
-1) Baseline Concurrent Server
- Base line is the tiny server provided for CSAPP.
 
-2) Optimized Baseline is still a Fork/Exec server with concurrency
-For each request, the server spawns a thread, which detatches and immediately does a fork() Execv()
+A request is accepted and its execution is deffered 
+to a thread pool. A thread picks up the request from 
+the thread pool queue, serves the request and closes
+the connection. Note that only HTTP 1.0 is supported 
+(No persistent connection support). 
 
-3) Xtiny is an improvement to Optimized baseline removing the need to Fork/Exec for every 
-request by passing the dynamic request args and connection descriptor to a helper process 
-over a UNIX domain socket. The helper process server dynamic content by reading the request args 
-and calling the appropriate function. All dynamic content generating functions must accept an input
-file descriptor and write their reponse on the passed fd. 
+Static requests are served my mmap'ing the static file. 
 
-In my Experiments I have found that Baseline peak response rate is about 1000 req/sec
-and Optimized is about 4000 req/sec and Xtiny can serve upto 11500 req/sec. 
-Note that network performance is very essential to hit these numbers.
+Dynamic Requests:
+CGI - As the CGI protocol mandates, each cgi request
+is handled by forking a process and dup'ing the 
+standard out.
 
-The results are more obvious when you run both the servers on a memory constrained machine. 
-The httperf results for Optimized and Xtiny are in the optimized.results and improved.results respectively
+Snap: In the snap mode dynamic requests are handled 
+by a separate process. A thread from the threadpool
+offloads the dynamic serving to another process using
+UNIX Domain Sockets by passing the connection descriptor
+and the HTTP arguments to the dynamic serving process. 
+The dynamic request serving process can form the response 
+and write it to the passed connection descriptor and close
+the request. 
+
+Starting:
+./xtiny -p 8000 -f settings.conf -q 50 -t 50 -d /tmp/domain.sock
+(q is the queue size and t is the number of threads in the thread pool)
+
+Start the dynamic serving process using 
+./content /tmp/domain.sock

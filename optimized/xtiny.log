@@ -1,6 +1,0 @@
-[INFO] (tiny.c:367) dumping xtiny_ctx
-[INFO] (tiny.c:368) config-file: [settings.conf] 
-[INFO] (tiny.c:369) cgi-path   : [cgi-bin] 
-[INFO] (tiny.c:370) static-root: [/afs/andrew.cmu.edu/usr18/skamuju/improved/static/] 
-[INFO] (tiny.c:371) log file   : [xtiny.log] 
-[INFO] (tiny.c:82) Successfull init for Snapy
